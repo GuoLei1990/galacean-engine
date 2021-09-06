@@ -1,24 +1,8 @@
 import { Ray } from "@oasis-engine/math";
-import { Layer } from "./Layer";
-import { ColliderFeature } from "./collider";
-import { Engine } from "./Engine";
-import { HitResult } from "./HitResult";
+import { HitResult } from "../HitResult";
+import { Layer } from "../Layer";
 
-/*
- * Manager for physical scenes.
- */
 export class PhysicsManager {
-  private static _currentHit: HitResult = new HitResult();
-
-  private _engine: Engine;
-
-  /**
-   * @internal
-   */
-  constructor(engine: Engine) {
-    this._engine = engine;
-  }
-
   /**
    * Casts a ray through the Scene and returns the first hit.
    * @param ray - The ray
@@ -76,60 +60,6 @@ export class PhysicsManager {
     layerMaskOrResult?: Layer | HitResult,
     outHitResult?: HitResult
   ): Boolean {
-    const cf = this._engine.sceneManager.activeScene.findFeature(ColliderFeature);
-    const colliders = cf.colliders;
-
-    let hitResult: HitResult;
-
-    let distance = Number.MAX_VALUE;
-    if (typeof distanceOrResult === "number") {
-      distance = distanceOrResult;
-    } else if (distanceOrResult != undefined) {
-      hitResult = distanceOrResult;
-    }
-
-    let layerMask = Layer.Everything;
-    if (typeof layerMaskOrResult === "number") {
-      layerMask = layerMaskOrResult;
-    } else if (layerMaskOrResult != undefined) {
-      hitResult = layerMaskOrResult;
-    }
-
-    if (outHitResult) {
-      hitResult = outHitResult;
-    }
-
-    let isHit = false;
-    const curHit = PhysicsManager._currentHit;
-    for (let i = 0, len = colliders.length; i < len; i++) {
-      const collider = colliders[i];
-
-      if (!(collider.entity.layer & layerMask)) {
-        continue;
-      }
-
-      if (collider._raycast(ray, curHit)) {
-        isHit = true;
-        if (curHit.distance < distance) {
-          if (hitResult) {
-            curHit.normal.cloneTo(hitResult.normal);
-            curHit.point.cloneTo(hitResult.point);
-            hitResult.distance = curHit.distance;
-            hitResult.collider = curHit.collider;
-          } else {
-            return true;
-          }
-          distance = curHit.distance;
-        }
-      }
-    }
-
-    if (!isHit && hitResult) {
-      hitResult.collider = null;
-      hitResult.distance = 0;
-      hitResult.point.setValue(0, 0, 0);
-      hitResult.normal.setValue(0, 0, 0);
-    }
-    return isHit;
+    return false;
   }
 }
