@@ -15,8 +15,5 @@
   ],
   "devDependencies": {
     "@oasis-engine/design": "0.5.2"
-  },
-  "dependencies": {
-    "@oasis-engine/core": "0.5.2"
   }
 }

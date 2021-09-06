@@ -36,7 +36,6 @@ import { Scene } from "./Scene";
 Scene.registerFeature(LightFeature);
 (Scene.prototype as any).hasLight = hasLight;
 
-export { PhysicsManager } from "./PhysicsManager";
 export { HitResult } from "./HitResult";
 
 export { Background } from "./Background";

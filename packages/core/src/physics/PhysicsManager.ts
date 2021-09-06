@@ -1,8 +1,11 @@
 import { Ray } from "@oasis-engine/math";
+import { Engine } from "..";
 import { HitResult } from "../HitResult";
 import { Layer } from "../Layer";
 
 export class PhysicsManager {
+  constructor(engine: Engine) {}
+
   /**
    * Casts a ray through the Scene and returns the first hit.
    * @param ray - The ray

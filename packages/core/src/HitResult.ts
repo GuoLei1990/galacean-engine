@@ -1,4 +1,4 @@
-import { Collider } from "./collider/Collider";
+import { Collider } from "./physics/Collider";
 import { Vector3 } from "@oasis-engine/math";
 
 /**
