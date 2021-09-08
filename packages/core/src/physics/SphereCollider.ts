@@ -1,5 +1,9 @@
-import { Component } from "../Component";
+import { Collider } from "./Collider";
 
-export class SphereCollider extends Component {
-  testA(): void {}
+/**
+ *  Sphere-shaped collider.
+ */
+export class SphereCollider extends Collider {
+  /** The radius of this SphereCollider. */
+  radius: number;
 }

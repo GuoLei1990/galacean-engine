@@ -1,5 +1,10 @@
-import { Component } from "../Component";
+import { Vector3 } from "@oasis-engine/math";
+import { Collider } from "./Collider";
 
-export class BoxCollider extends Component {
-  testA(): void {}
+/**
+ * Box-shaped collider.
+ */
+export class BoxCollider extends Collider {
+  /** The size of this BoxCollider. */
+  size: Vector3;
 }
