@@ -40,4 +40,8 @@ export class PhysXPhysics {
   static createCapsuleColliderShape(): ICapsuleColliderShape {
     throw "";
   }
+
+  private constructor() {
+    
+  }
 }
