@@ -7,11 +7,11 @@ import {
   IPlaneColliderShape,
   ISphereColliderShape,
   IStaticCollider,
-  StaticInterfaceImplements
+  StaticInterfaceImplement
 } from "@oasis-engine/design";
 import { Vector3 } from "@oasis-engine/math";
 
-@StaticInterfaceImplements<IPhysics>()
+@StaticInterfaceImplement<IPhysics>()
 export class PhysXPhysics {
   static init(): Promise<void> {
     return null;
@@ -41,7 +41,5 @@ export class PhysXPhysics {
     throw "";
   }
 
-  private constructor() {
-    
-  }
+  private constructor() {}
 }

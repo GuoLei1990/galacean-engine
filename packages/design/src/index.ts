@@ -1,5 +1,5 @@
 export type { IClone } from "./IClone";
 export * from "./physics/index";
 export * from "./renderingHardwareInterface/index";
-export { StaticInterfaceImplements } from "./StaticInterfaceImplements";
+export { StaticInterfaceImplement } from "./StaticInterfaceImplement";
 

@@ -7,11 +7,11 @@ import {
   IPlaneColliderShape,
   ISphereColliderShape,
   IStaticCollider,
-  StaticInterfaceImplements
+  StaticInterfaceImplement
 } from "@oasis-engine/design";
 import { Vector3 } from "@oasis-engine/math";
 
-@StaticInterfaceImplements<IPhysics>()
+@StaticInterfaceImplement<IPhysics>()
 export class LitePhysics {
   static createPhysicsManager(): IPhysicsManager {
     throw "";
