@@ -1,4 +1,5 @@
 import { Vector3 } from "@oasis-engine/math";
+import { PhysicsManager } from "../PhysicsManager";
 import { ColliderShape } from "./ColliderShape";
 
 /**
@@ -8,7 +9,8 @@ export class BoxColliderShape extends ColliderShape {
   /** The size of this BoxColliderShape. */
   size: Vector3;
 
-  // constructor() {
-
-  // }
+  constructor(size: Vector3) {
+    super();
+    this._nativeShape = PhysicsManager._nativePhysics.createBoxColliderShape(size);
+  }
 }
