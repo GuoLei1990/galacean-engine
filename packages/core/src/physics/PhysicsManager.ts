@@ -1,9 +1,16 @@
+import { IPhysicsManager, IPhysicsManagerType } from "@oasis-engine/design";
 import { Ray } from "@oasis-engine/math";
 import { Engine } from "..";
 import { HitResult } from "../HitResult";
 import { Layer } from "../Layer";
 
 export class PhysicsManager {
+  /** @internal */
+  static _physicManagerType: IPhysicsManagerType;
+
+  /** @internal */
+  _nativePhysicsManagerInstance: IPhysicsManager;
+
   constructor(engine: Engine) {}
 
   /**

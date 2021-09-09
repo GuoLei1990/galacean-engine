@@ -1,8 +1,9 @@
-import { IClone } from "@oasis-engine/design";
+
 import { BoundingBox } from "./BoundingBox";
 import { BoundingSphere } from "./BoundingSphere";
 import { CollisionUtil } from "./CollisionUtil";
 import { ContainmentType } from "./enums/ContainmentType";
+import { IClone } from "./IClone";
 import { Matrix } from "./Matrix";
 import { Plane } from "./Plane";
 

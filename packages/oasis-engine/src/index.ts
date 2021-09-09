@@ -3,19 +3,13 @@ export * from "@oasis-engine/loader";
 export * from "@oasis-engine/math";
 export * from "@oasis-engine/rhi-webgl";
 import {
-  AmbientLight,
-  BoxCollider,
-  Camera,
+  AmbientLight, Animator, Camera,
   Component,
   DirectLight,
   ParticleRenderer,
-  PointLight,
-  SphereCollider,
-  SpriteRenderer,
-  SpriteMask,
-  Animator
+  PointLight, SpriteMask, SpriteRenderer
 } from "@oasis-engine/core";
-import { GLTFModel, Parser, Model } from "@oasis-engine/loader";
+import { GLTFModel, Model, Parser } from "@oasis-engine/loader";
 
 Parser.registerComponents("o3", {
   GLTFModel,
@@ -25,11 +19,9 @@ Parser.registerComponents("o3", {
   AmbientLight,
   DirectLight,
   ParticleRenderer,
-  BoxCollider,
   Camera,
   Model,
   Component,
-  SphereCollider,
   Animator
 });
 

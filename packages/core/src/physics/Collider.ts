@@ -1,17 +1,35 @@
-import { Vector3 } from "@oasis-engine/math";
+import { ICollider } from "@oasis-engine/design";
 import { Component } from "../Component";
-import { PhysicsMaterial } from "./PhysicsMaterial";
+import { ColliderShape } from "./shape/ColliderShape";
 
 /**
- * Basic class of collider.
+ * Basic class of rigid body collider.
  */
 export abstract class Collider extends Component {
-  /** The rotation of this Collider. */
-  position: Vector3;
-  /** The rotation of this Collider. */
-  rotation: Vector3;
-  /** Whether the collider is a trigger. */
-  isTrigger: boolean;
-  /** The physic material of this collider. */
-  material: PhysicsMaterial;
+  /** @internal */
+  _nativeStaticCollider: ICollider;
+
+  private _shapes: ColliderShape[];
+
+  /** The shape of the Collider. */
+  get shapes(): Readonly<ColliderShape[]> {
+    return this._shapes;
+  }
+
+  /**
+   * Add a collider shape.
+   * @param shape - The collider shape.
+   */
+  addShape(shape: ColliderShape): void {}
+
+  /**
+   * Remove a collider shape.
+   * @param shape - The collider shape.
+   */
+  removeShape(shape: ColliderShape): void {}
+
+  /**
+   * Clear all shape collection.
+   */
+  clearShapes(): void {}
 }

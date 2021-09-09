@@ -4,52 +4,91 @@ import { Engine } from "../Engine";
 import { HitResult } from "../HitResult";
 import { Layer } from "../Layer";
 
-export abstract class Collider extends Component {
-  /** The rotation of this Collider. */
+/**
+ * Basic class of collider shape.
+ */
+export abstract class ColliderShape {
+  /** The rotation of this ColliderShape. */
   position: Vector3;
-  /** The rotation of this Collider. */
+  /** The rotation of this ColliderShape. */
   rotation: Vector3;
-  /** Whether the collider is a trigger. */
+  /** Whether the ColliderShape is a trigger. */
   isTrigger: boolean;
-  /** The physic material of this collider. */
+  /** The physic material of this ColliderShape. */
   material: PhysicsMaterial;
 }
 
 /**
- * Box-shaped collider.
+ * Box-shaped collider shape.
  */
-export class BoxCollider extends Collider {
-  /** The size of this BoxCollider. */
+export class BoxColliderShape extends ColliderShape {
+  /** The size of this BoxColliderShape. */
   size: Vector3;
 }
 
 /**
- *  Capsule-shaped collider.
+ *  Sphere-shaped collider shape.
  */
-export class CapsuleCollider extends Collider {
-  /** The radius of this CapsuleCollider. */
+export class SphereColliderShape extends ColliderShape {
+  /** The radius of this SphereColliderShape. */
   radius: number;
-  /** The height of this CapsuleCollider. */
-  height: number;
 }
 
 /**
- * Plane-shaped collider.
+ * Plane-shaped collider shape.
  */
-export class PlaneCollider extends Collider {
-  /** The normal of this PlaneCollider. */
+export class PlaneColliderShape extends ColliderShape {
+  /** The normal of this PlaneColliderShape. */
   normal: Vector3;
 }
 
 /**
- *  Sphere-shaped collider.
+ *  Capsule-shaped collider shape.
  */
-export class SphereCollider extends Collider {
-  /** The radius of this SphereCollider. */
+export class CapsuleColliderShape extends ColliderShape {
+  /** The radius of this CapsuleColliderShape. */
   radius: number;
+  /** The height of this CapsuleColliderShape. */
+  height: number;
 }
 
+/**
+ * Basic class of rigid body collider.
+ */
+ export abstract class Collider extends Component {
+  /** The shape of the Collider. */
+  shape: ColliderShape;
+}
 
+/**
+ * A static rigid body collider component that will not move when colliding with a dynamic rigid body collider.
+ * @remarks Mostly used for object which always stays at the same place and never moves around.
+ */
+export class StaticCollider extends Collider {}
+
+/**
+ * A dynamic rigid body collider component.
+ */
+export class DynamicCollider extends Collider {
+  /** The linear velocity vector of the RigidBody measured in world unit per second. */
+  linearVelocity: number;
+  /** The angular velocity vector of the RigidBody measured in radians per second. */
+  angularVelocity: number;
+  /** The linear damping of the RigidBody. */
+  linearDamping: number;
+  /** The angular damping of the RigidBody. */
+  angularDamping: number;
+  /** The mass of the RigidBody. */
+  mass: number;
+  /** Controls whether physics affects the RigidBody. */
+  isKinematic: boolean;
+
+  /** apply a force to the DynamicCollider. */
+  applyForce(force: Vector3): void {}
+
+  /** apply a torque to the DynamicCollider. */
+  applyTorque(torque: Vector3): void {}
+}
 export class PhysicsManager {
   constructor(engine: Engine) {}
 
@@ -127,9 +166,23 @@ export class PhysicsMaterial {
   /** The friction coefficient used when an object is lying on a surface. */
   staticFriction: number;
 
-  /** The friction bounce mode.*/
-  bounceCombine: number;
+  /** The friction bounce mode. */
+  bounceCombine: PhysicsMaterialCombineMode;
 
   /** The friction combine mode. */
-  frictionCombine: number;
+  frictionCombine: PhysicsMaterialCombineMode;
+}
+
+/**
+ * Describes how physics materials of the colliders are combined.
+ */
+export enum PhysicsMaterialCombineMode {
+  /** Averages the friction/bounce of the two colliding materials. */
+  Average,
+  /** Uses the smaller friction/bounce of the two colliding materials. */
+  Minimum,
+  /** Uses the larger friction/bounce of the two colliding materials. */
+  Maximum,
+  /** Multiplies the friction/bounce of the two colliding materials. */
+  Multiply
 }

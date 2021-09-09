@@ -1,3 +1,5 @@
+import { PhysicsMaterialCombineMode } from "./enums/PhysicsMaterialCombineMode";
+
 /**
  * Describe how to handle with collisions between colliders.
  */
@@ -11,9 +13,9 @@ export class PhysicsMaterial {
   /** The friction coefficient used when an object is lying on a surface. */
   staticFriction: number;
 
-  /** The friction bounce mode.*/
-  bounceCombine: number;
+  /** The friction bounce mode. */
+  bounceCombine: PhysicsMaterialCombineMode;
 
   /** The friction combine mode. */
-  frictionCombine: number;
+  frictionCombine: PhysicsMaterialCombineMode;
 }

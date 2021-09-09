@@ -1,13 +1,39 @@
-import { IPhysicsEngine } from "@oasis-engine/design";
-export class LitePhysicsEngine implements IPhysicsEngine {
-  testA() {
-    console.log("testA");
+import {
+  IBoxColliderShape,
+  ICapsuleColliderShape,
+  ICollider,
+  IDynamicCollider,
+  IPhysicsManagerType,
+  IPlaneColliderShape,
+  ISphereColliderShape,
+  IStaticCollider,
+  StaticInterfaceImplements
+} from "@oasis-engine/design";
+import { Vector3 } from "@oasis-engine/math";
+
+@StaticInterfaceImplements<IPhysicsManagerType>()
+export class LitePhysicsManager {
+  static createBoxColliderShape(size: Vector3): IBoxColliderShape {
+    throw "";
   }
-  testB() {
-    console.log("testB");
+  static createSphereColliderShape(radius: number): ISphereColliderShape {
+    throw "";
+  }
+  static createPlaneColliderShape(normal: Vector3): IPlaneColliderShape {
+    throw "";
   }
 
-  testC() {
-    console.log("testC");
+  static createCapsuleColliderShape(): ICapsuleColliderShape {
+    throw "";
   }
+
+  static createStaticCollider(): IStaticCollider {
+    throw "";
+  }
+  static createDynamicCollider(): IDynamicCollider {
+    throw "";
+  }
+
+  addCollider(collider: ICollider): void {}
+  removeCollider(collider: ICollider): void {}
 }

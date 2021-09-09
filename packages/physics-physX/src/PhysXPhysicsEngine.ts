@@ -1,13 +1,36 @@
-import { IPhysicsEngine } from "@oasis-engine/design";
-export class PhysXPhysicsEngine implements IPhysicsEngine {
-  testA() {
-    console.log("physX-testA");
-  }
-  testB() {
-    console.log("physX-testB");
-  }
+import {
+  IBoxColliderShape,
+  ICapsuleColliderShape,
+  ICollider,
+  IDynamicCollider,
+  IPhysicsManagerType,
+  IPlaneColliderShape,
+  ISphereColliderShape,
+  IStaticCollider,
+  StaticInterfaceImplements
+} from "@oasis-engine/design";
+import { Vector3 } from "@oasis-engine/math";
 
-  testC() {
-    console.log("physX-testC");
+@StaticInterfaceImplements<IPhysicsManagerType>()
+export class PhysXPhysicsManager {
+  static createBoxColliderShape(size: Vector3): IBoxColliderShape {
+    throw "";
   }
+  static createSphereColliderShape(radius: number): ISphereColliderShape {
+    throw "";
+  }
+  static createPlaneColliderShape(normal: Vector3): IPlaneColliderShape {
+    throw "";
+  }
+  static createCapsuleColliderShape(): ICapsuleColliderShape {
+    throw "";
+  }
+  static createStaticCollider(): IStaticCollider {
+    throw "";
+  }
+  static createDynamicCollider(): IDynamicCollider {
+    throw "";
+  }
+  addCollider(collider: ICollider): void {}
+  removeCollider(collider: ICollider): void {}
 }
