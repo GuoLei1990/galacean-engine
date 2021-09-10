@@ -8,6 +8,6 @@ export interface IPhysicsManager {
     ray: Ray,
     distance: number,
     layerMask: number,
-    outHitResult: (colliderID: number, distance: number, point: Vector3, normal: Vector3) => void
+    outHitResult?: (colliderID: number, distance: number, point: Vector3, normal: Vector3) => void
   ): Boolean;
 }
