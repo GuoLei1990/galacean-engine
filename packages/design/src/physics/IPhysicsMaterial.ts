@@ -1,4 +1,4 @@
-export class IPhysicsMaterial {
+export interface IPhysicsMaterial {
   bounciness: number;
   dynamicFriction: number;
   staticFriction: number;
