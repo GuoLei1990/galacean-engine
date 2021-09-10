@@ -2,6 +2,6 @@ import { Vector3 } from "@oasis-engine/math/types/Vector3";
 import { ICollider } from "../ICollider";
 
 export interface IPlaneColliderShape extends ICollider {
-  normal: Vector3;
-  distance: number;
+  setNormal(value: Vector3): void;
+  setDistance(distance: number): void;
 }
