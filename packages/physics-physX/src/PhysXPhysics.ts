@@ -6,10 +6,10 @@ import {
   IPhysicsManager,
   IPlaneColliderShape,
   ISphereColliderShape,
-  IStaticCollider,
-  StaticInterfaceImplement
+  IStaticCollider
 } from "@oasis-engine/design";
 import { Vector3 } from "@oasis-engine/math";
+import { StaticInterfaceImplement } from "./StaticInterfaceImplement";
 
 @StaticInterfaceImplement<IPhysics>()
 export class PhysXPhysics {
@@ -37,7 +37,7 @@ export class PhysXPhysics {
   static createPlaneColliderShape(normal: Vector3): IPlaneColliderShape {
     throw "";
   }
-  static createCapsuleColliderShape(radius: number,height:number): ICapsuleColliderShape {
+  static createCapsuleColliderShape(radius: number, height: number): ICapsuleColliderShape {
     throw "";
   }
 
