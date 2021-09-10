@@ -40,6 +40,8 @@ export class SphereColliderShape extends ColliderShape {
 export class PlaneColliderShape extends ColliderShape {
   /** The normal of this PlaneColliderShape. */
   normal: Vector3;
+  /** The distance of this PlaneColliderShape. */
+  distance: number;
 }
 
 /**
@@ -55,9 +57,28 @@ export class CapsuleColliderShape extends ColliderShape {
 /**
  * Basic class of rigid body collider.
  */
- export abstract class Collider extends Component {
+export abstract class Collider extends Component {
   /** The shape of the Collider. */
-  shape: ColliderShape;
+  get shapes(): Readonly<ColliderShape[]> {
+    return null;
+  }
+
+  /**
+   * Add a collider shape.
+   * @param shape - The collider shape.
+   */
+  addShape(shape: ColliderShape): void {}
+
+  /**
+   * Remove a collider shape.
+   * @param shape - The collider shape.
+   */
+  removeShape(shape: ColliderShape): void {}
+
+  /**
+   * Clear all shape collection.
+   */
+  clearShapes(): void {}
 }
 
 /**
