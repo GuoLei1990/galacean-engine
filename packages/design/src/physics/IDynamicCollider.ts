@@ -1,6 +1,7 @@
 import { Vector3 } from "@oasis-engine/math";
+import { ICollider } from ".";
 
-export interface IDynamicCollider {
+export interface IDynamicCollider extends ICollider {
   linearVelocity: number;
   angularVelocity: number;
   linearDamping: number;

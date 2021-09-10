@@ -1,1 +1,3 @@
-export interface IStaticCollider {}
+import { ICollider } from "./ICollider";
+
+export interface IStaticCollider extends ICollider {}
