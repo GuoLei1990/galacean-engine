@@ -15,6 +15,6 @@ export interface IPhysics {
 
   createBoxColliderShape(size: Vector3): IBoxColliderShape;
   createSphereColliderShape(radius: number): ISphereColliderShape;
-  createPlaneColliderShape(normal: Vector3): IPlaneColliderShape;
-  createCapsuleColliderShape(): ICapsuleColliderShape;
+  createPlaneColliderShape(normal: Vector3,distance:number): IPlaneColliderShape;
+  createCapsuleColliderShape(radius: number, height: number): ICapsuleColliderShape;
 }

@@ -7,4 +7,6 @@ import { ColliderShape } from "./ColliderShape";
 export class PlaneColliderShape extends ColliderShape {
   /** The normal of this PlaneColliderShape. */
   normal: Vector3;
+  /** The distance of this PlaneColliderShape. */
+  distance: number;
 }

@@ -37,7 +37,7 @@ export class PhysXPhysics {
   static createPlaneColliderShape(normal: Vector3): IPlaneColliderShape {
     throw "";
   }
-  static createCapsuleColliderShape(): ICapsuleColliderShape {
+  static createCapsuleColliderShape(radius: number,height:number): ICapsuleColliderShape {
     throw "";
   }
 
