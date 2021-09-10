@@ -1,3 +1,5 @@
 import { ICollider } from "../ICollider";
 
-export interface ISphereColliderShape extends ICollider {}
+export interface ISphereColliderShape extends ICollider {
+  radius: number;
+}
