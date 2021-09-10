@@ -22,7 +22,7 @@ export class DynamicCollider extends Collider {
 
   constructor(entity: Entity) {
     super(entity);
-    // this._nativeStaticCollider = IPhysicsManagerStatic.createDynamicCollider();
+    this._nativeStaticCollider = PhysicsManager._nativePhysics.createDynamicCollider();
   }
 
   /** apply a force to the DynamicCollider. */

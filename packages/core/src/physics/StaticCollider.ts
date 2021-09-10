@@ -1,6 +1,6 @@
-// import { IPhysicsManagerStatic } from "@oasis-engine/design";
 import { Entity } from "../Entity";
 import { Collider } from "./Collider";
+import { PhysicsManager } from "./PhysicsManager";
 
 /**
  * A static rigid body collider component that will not move when colliding with a dynamic rigid body collider.
@@ -9,6 +9,6 @@ import { Collider } from "./Collider";
 export class StaticCollider extends Collider {
   constructor(entity: Entity) {
     super(entity);
-    // this._nativeStaticCollider = IPhysicsManagerStatic.createStaticCollider();
+    this._nativeStaticCollider = PhysicsManager._nativePhysics.createStaticCollider();
   }
 }
