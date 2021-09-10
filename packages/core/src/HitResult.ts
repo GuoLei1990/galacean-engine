@@ -1,4 +1,3 @@
-import { Collider } from "./physics/Collider";
 import { Vector3 } from "@oasis-engine/math";
 import { ColliderShape } from "./physics/shape/ColliderShape";
 

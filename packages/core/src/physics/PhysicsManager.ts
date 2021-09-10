@@ -72,4 +72,9 @@ export class PhysicsManager {
   ): Boolean {
     return false;
   }
+
+  /**
+   * @internal
+   */
+  _update(deltaTime: number): void {}
 }

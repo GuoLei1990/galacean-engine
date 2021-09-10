@@ -7,6 +7,8 @@ import { Entity } from "./Entity";
 import { FeatureManager } from "./FeatureManager";
 import { RenderQueueType } from "./material/enums/RenderQueueType";
 import { Material } from "./material/Material";
+import { ModelMesh, PrimitiveMesh } from "./mesh";
+import { PhysicsManager } from "./physics/PhysicsManager";
 import { IHardwareRenderer } from "./renderingHardwareInterface/IHardwareRenderer";
 import { ClassPool } from "./RenderPipeline/ClassPool";
 import { RenderContext } from "./RenderPipeline/RenderContext";
@@ -16,6 +18,7 @@ import { SpriteMaskElement } from "./RenderPipeline/SpriteMaskElement";
 import { SpriteMaskManager } from "./RenderPipeline/SpriteMaskManager";
 import { Scene } from "./Scene";
 import { SceneManager } from "./SceneManager";
+import { CompareFunction } from "./shader";
 import { BlendFactor } from "./shader/enums/BlendFactor";
 import { BlendOperation } from "./shader/enums/BlendOperation";
 import { ColorWriteMask } from "./shader/enums/ColorWriteMask";
@@ -25,9 +28,6 @@ import { ShaderPool } from "./shader/ShaderPool";
 import { ShaderProgramPool } from "./shader/ShaderProgramPool";
 import { RenderState } from "./shader/state/RenderState";
 import { Texture2D, TextureCubeFace, TextureCubeMap, TextureFormat } from "./texture";
-import { PhysicsManager } from "./physics/PhysicsManager";
-import { ModelMesh, PrimitiveMesh } from "./mesh";
-import { CompareFunction } from "./shader";
 
 /** TODO: delete */
 const engineFeatureManager = new FeatureManager<EngineFeature>();
@@ -242,7 +242,11 @@ export class Engine extends EventDispatcher {
     const scene = this._sceneManager._activeScene;
     const componentsManager = this._componentsManager;
     if (scene) {
-      componentsManager.callScriptOnStart();
+      componentsManager.callScriptOnStart(); //init event
+
+      this.physicsManager._update(deltaTime);
+      // Input event
+
       componentsManager.callScriptOnUpdate(deltaTime);
       componentsManager.callAnimationUpdate(deltaTime);
       componentsManager.callScriptOnLateUpdate(deltaTime);
