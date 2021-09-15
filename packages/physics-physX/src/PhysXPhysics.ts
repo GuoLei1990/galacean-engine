@@ -9,11 +9,17 @@ import {
   IStaticCollider
 } from "@oasis-engine/design";
 import { Vector3 } from "@oasis-engine/math";
+import { RuntimeMode } from "./enums/RuntimeMode";
 import { StaticInterfaceImplement } from "./StaticInterfaceImplement";
 
 @StaticInterfaceImplement<IPhysics>()
 export class PhysXPhysics {
-  static init(): Promise<void> {
+  /**
+   * Initialize PhysXPhysics.
+   * @param runtimeMode - Runtime mode
+   * @returns Promise object
+   */
+  static init(runtimeMode: RuntimeMode): Promise<void> {
     return null;
   }
 
