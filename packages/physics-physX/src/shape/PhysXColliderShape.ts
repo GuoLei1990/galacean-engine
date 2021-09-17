@@ -6,4 +6,6 @@ export class PhysXColliderShape implements IColliderShape {
   setPosition(position: Vector3): void {}
   setIsTrigger(isTrigger: boolean): void {}
   setMaterial(material: IPhysicsMaterial): void {}
+
+  setWorldScale(scale: Vector3): void {}
 }
