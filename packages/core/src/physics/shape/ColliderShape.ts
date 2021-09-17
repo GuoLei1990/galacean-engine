@@ -8,8 +8,6 @@ import { PhysicsMaterial } from "../PhysicsMaterial";
 export abstract class ColliderShape {
   /** The rotation of this ColliderShape. */
   position: Vector3;
-  /** The rotation of this ColliderShape. */
-  rotation: Vector3;
   /** Whether the ColliderShape is a trigger. */
   isTrigger: boolean;
   /** The physic material of this ColliderShape. */

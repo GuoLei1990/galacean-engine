@@ -1,3 +1,4 @@
+import { ColliderShapeUpAxis } from "../enums/ColliderShapeUpAxis";
 import { ColliderShape } from "./ColliderShape";
 
 /**
@@ -8,4 +9,6 @@ export class CapsuleColliderShape extends ColliderShape {
   radius: number;
   /** The height of this CapsuleColliderShape. */
   height: number;
+  /** The up axis of this CapsuleColliderShape. */
+  upAxis: ColliderShapeUpAxis;
 }
