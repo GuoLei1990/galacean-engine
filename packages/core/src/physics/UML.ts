@@ -10,8 +10,6 @@ import { Layer } from "../Layer";
 export abstract class ColliderShape {
   /** The rotation of this ColliderShape. */
   position: Vector3;
-  /** The rotation of this ColliderShape. */
-  rotation: Vector3;
   /** Whether the ColliderShape is a trigger. */
   isTrigger: boolean;
   /** The physic material of this ColliderShape. */
@@ -38,6 +36,8 @@ export class SphereColliderShape extends ColliderShape {
  * Plane-shaped collider shape.
  */
 export class PlaneColliderShape extends ColliderShape {
+  /** The rotation of this PlaneColliderShape. */
+  rotation: Vector3;
 }
 
 /**
@@ -48,6 +48,8 @@ export class CapsuleColliderShape extends ColliderShape {
   radius: number;
   /** The height of this CapsuleColliderShape. */
   height: number;
+  /** The up axis of this CapsuleColliderShape. */
+  upAxis: ColliderShapeUpAxis;
 }
 
 /**
@@ -202,4 +204,16 @@ export enum PhysicsMaterialCombineMode {
   Maximum,
   /** Multiplies the friction/bounce of the two colliding materials. */
   Multiply
+}
+
+/**
+ * The up axis of the collider shape.
+ */
+export enum ColliderShapeUpAxis {
+  /** Up axis is X. */
+  X,
+  /** Up axis is Y. */
+  Y,
+  /** Up axis is Z. */
+  Z
 }
