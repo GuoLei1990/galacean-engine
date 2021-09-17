@@ -5,6 +5,6 @@ import { ColliderShape } from "./ColliderShape";
  * Plane-shaped collider shape.
  */
 export class PlaneColliderShape extends ColliderShape {
-  /** The normal of this PlaneColliderShape. */
-  normal: Vector3;
+  /** The rotation of this PlaneColliderShape. */
+  rotation: Vector3;
 }
