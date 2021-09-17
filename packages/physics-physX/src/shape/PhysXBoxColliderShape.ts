@@ -3,5 +3,5 @@ import { Vector3 } from "@oasis-engine/math";
 import { PhysXColliderShape } from "./PhysXColliderShape";
 
 export class PhysXBoxColliderShape extends PhysXColliderShape implements IBoxColliderShape {
-  size: Vector3;
+  setSize(size: Vector3): void {}
 }
