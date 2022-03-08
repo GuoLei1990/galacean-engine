@@ -15,14 +15,31 @@ export class DynamicCollider extends Collider {
   linearDamping: number;
   /** The angular damping of the RigidBody. */
   angularDamping: number;
+  /** The center of mass relative to the transform's origin. */
+  centerOfMass: number;
+  /** The diagonal inertia tensor of mass relative to the center of mass. */
+  inertiaTensor: Vector3;
+  /** The maximum angular velocity of the collider measured in radians per second. (Default 7) range { 0, infinity }. */
+  maxAngularVelocity: number;
+  /** Maximum velocity of a collider when moving out of penetrating state. */
+  maxDepenetrationVelocity: number;
   /** The mass of the RigidBody. */
   mass: number;
+  /** The mass-normalized energy threshold, below which objects start going to sleep. */
+  sleepThreshold: number;
+  /** The solverIterations determines how accurately collider joints and collision contacts are resolved. */
+  solverIterations: number;
+  /** Controls whether physics will change the rotation of the object. */
+  freezeRotation: boolean;
+  /** The particular rigid dynamic lock flag. */
+  constraints: number;
+  /** The colliders' collision detection mode. */
+  collisionDetectionMode: number;
   /** Controls whether physics affects the RigidBody. */
   isKinematic: boolean;
 
   constructor(entity: Entity) {
     super(entity);
-    this._nativeStaticCollider = PhysicsManager._nativePhysics.createDynamicCollider();
   }
 
   /** apply a force to the DynamicCollider. */
