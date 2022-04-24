@@ -23,9 +23,10 @@ export abstract class Texture extends RefObject {
   protected _mipmapCount: number;
 
   private _wrapModeU: TextureWrapMode;
-  private _wrapModeV: TextureWrapMode;
+ 
   private _filterMode: TextureFilterMode;
   private _anisoLevel: number = 1;
+  private _wrapModeV: TextureWrapMode;
 
   /**
    * Texture format.
