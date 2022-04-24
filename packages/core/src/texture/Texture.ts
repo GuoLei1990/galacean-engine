@@ -13,11 +13,13 @@ export abstract class Texture extends RefObject {
 
   /** @internal */
   _platformTexture: IPlatformTexture;
-  /** @internal */
-  _mipmap: boolean;
+  
 
   protected _width: number;
   protected _format: TextureFormat;
+
+  /** @internal */
+  _mipmap: boolean;
   
   protected _height: number;
   protected _mipmapCount: number;
