@@ -319,10 +319,12 @@ export class Entity extends EngineObject {
     cloneEntity._isActive = this._isActive;
     cloneEntity.transform.localMatrix = this.transform.localMatrix;
 
+    
     const children = this._children;
     for (let i = 0, len = this._children.length; i < len; i++) {
       const child = children[i];
       cloneEntity.addChild(child.clone());
+
     }
 
     const components = this._components;

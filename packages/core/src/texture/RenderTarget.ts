@@ -38,6 +38,7 @@ export class RenderTarget extends EngineObject {
    * Render target width.
    */
   get width(): number {
+
     return this._width;
   }
 
@@ -156,8 +157,9 @@ export class RenderTarget extends EngineObject {
   ) {
     super(engine);
 
-    this._width = width;
+   
     this._height = height;
+    this._width = width;
     this._antiAliasing = antiAliasing;
     this._depth = depth;
 
