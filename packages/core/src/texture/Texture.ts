@@ -129,7 +129,6 @@ export abstract class Texture extends RefObject {
   generateMipmaps(): void {
     if (!this._mipmap) return;
 
-    
     this._platformTexture.generateMipmaps();
   }
 
