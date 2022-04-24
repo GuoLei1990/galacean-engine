@@ -16,8 +16,9 @@ export abstract class Texture extends RefObject {
   /** @internal */
   _mipmap: boolean;
 
-  protected _format: TextureFormat;
   protected _width: number;
+  protected _format: TextureFormat;
+  
   protected _height: number;
   protected _mipmapCount: number;
 
