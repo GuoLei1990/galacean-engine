@@ -154,7 +154,6 @@ export class CascadedShadowCasterPass {
           shadowSliceData
         );
 
-        const shadowMatrices = this._shadowMatrices;
         ShadowUtils.getDirectionalLightMatrices(
           lightUp,
           lightSide,
