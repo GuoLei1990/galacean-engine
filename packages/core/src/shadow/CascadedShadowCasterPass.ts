@@ -154,6 +154,7 @@ export class CascadedShadowCasterPass {
           shadowSliceData
         );
 
+        const shadowMatrices = this._shadowMatrices;
         ShadowUtils.getDirectionalLightMatrices(
           lightUp,
           lightSide,
@@ -161,7 +162,8 @@ export class CascadedShadowCasterPass {
           j,
           light.shadowNearPlane,
           shadowTileResolution,
-          shadowSliceData
+          shadowSliceData,
+          shadowMatrices
         );
         if (shadowCascades > 1) {
           const shadowMapSize = this._shadowMapSize;
@@ -171,7 +173,7 @@ export class CascadedShadowCasterPass {
             shadowMapSize.w,
             j,
             this._viewportOffsets[j],
-            this._shadowMatrices
+            shadowMatrices
           );
         }
         this._updateSingleShadowCasterShaderData(<DirectLight>light, shadowSliceData, context);
@@ -184,7 +186,6 @@ export class CascadedShadowCasterPass {
         splitBoundSpheres[offset + 1] = center.y;
         splitBoundSpheres[offset + 2] = center.z;
         splitBoundSpheres[offset + 3] = radius * radius;
-        shadowMatrices.set(shadowSliceData.virtualCamera.viewProjectionMatrix.elements, 16 * j);
 
         opaqueQueue.clear();
         alphaTestQueue.clear();

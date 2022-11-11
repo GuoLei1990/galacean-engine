@@ -40,6 +40,15 @@ enum FrustumCorner {
 export class ShadowUtils {
   private static _tempMatrix0: Matrix = new Matrix();
 
+  // prettier-ignore
+  /** @internal */
+  private static _shadowMapScaleOffsetMatrix: Matrix = new Matrix(
+    0.5, 0.0, 0.0, 0.0,
+    0.0, 0.5, 0.0, 0.0,
+    0.0, 0.0, 1.0, 0.0,
+    0.5, 0.5, 0.0, 1.0
+  );
+
   private static _frustumCorners: Vector3[] = [
     new Vector3(),
     new Vector3(),
@@ -337,7 +346,8 @@ export class ShadowUtils {
     cascadeIndex: number,
     nearPlane: number,
     shadowResolution: number,
-    shadowSliceData: ShadowSliceData
+    shadowSliceData: ShadowSliceData,
+    outShadowMatrices: Float32Array
   ): void {
     const boundSphere = shadowSliceData.splitBoundSphere;
     shadowSliceData.resolution = shadowResolution;
@@ -378,7 +388,16 @@ export class ShadowUtils {
       radius * 2.0 + nearPlane,
       projectMatrix
     );
-    Matrix.multiply(projectMatrix, viewMatrix, virtualCamera.viewProjectionMatrix);
+
+    const viewProjectionMatrix = virtualCamera.viewProjectionMatrix;
+    Matrix.multiply(projectMatrix, viewMatrix, viewProjectionMatrix);
+    Utils._floatMatrixMultiply(
+      ShadowUtils._shadowMapScaleOffsetMatrix.elements,
+      viewProjectionMatrix.elements,
+      0,
+      outShadowMatrices,
+      cascadeIndex * 16
+    );
   }
 
   static getMaxTileResolutionInAtlas(atlasWidth: number, atlasHeight: number, tileCount: number): number {
