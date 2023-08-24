@@ -199,14 +199,18 @@ export class ParticleRenderer extends Renderer {
     const particleSystem = this.generator;
     const primitive = particleSystem._primitive;
 
-    if (particleSystem._firstActiveElement < particleSystem._firstFreeElement) {
-      primitive.instanceCount = particleSystem._firstFreeElement - particleSystem._firstActiveElement;
+    if (particleSystem._XXMode) {
+      primitive.instanceCount = particleSystem._currentParticleCount;
     } else {
-      let instanceCount = particleSystem._currentParticleCount - particleSystem._firstActiveElement;
-      if (particleSystem._firstFreeElement > 0) {
-        instanceCount += particleSystem._firstFreeElement;
+      if (particleSystem._firstActiveElement < particleSystem._firstFreeElement) {
+        primitive.instanceCount = particleSystem._firstFreeElement - particleSystem._firstActiveElement;
+      } else {
+        let instanceCount = particleSystem._currentParticleCount - particleSystem._firstActiveElement;
+        if (particleSystem._firstFreeElement > 0) {
+          instanceCount += particleSystem._firstFreeElement;
+        }
+        primitive.instanceCount = instanceCount;
       }
-      primitive.instanceCount = instanceCount;
     }
 
     const material = this.getMaterial();

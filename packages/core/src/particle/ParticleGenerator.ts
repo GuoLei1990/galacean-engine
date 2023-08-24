@@ -41,7 +41,7 @@ export class ParticleGenerator {
   private static _tempColor0 = new Color();
   /** @internal */
   private static _tempParticleRenderers = new Array<ParticleRenderer>();
-  private static readonly _particleIncreaseCount = 128;
+  private static readonly _particleIncreaseCount = 32;
 
   /** Use auto random seed. */
   useAutoRandomSeed = true;
@@ -113,6 +113,9 @@ export class ParticleGenerator {
   @ignoreClone
   private _instanceVertices: Float32Array;
   private _randomSeed = 0;
+
+  @ignoreClone
+  _XXMode = false;
 
   /**
    * Whether the particle system is contain alive or is still creating particles.
@@ -263,15 +266,21 @@ export class ParticleGenerator {
     }
 
     // Add new particles to vertex buffer when has wait process retired element or new particle
-    //
-    // Another choice is just add new particles to vertex buffer and render all particles ignore the retired particle in shader, especially billboards
-    // But webgl don't support map buffer range, so this choice don't have performance advantage even less set data to GPU
-    if (
-      this._firstNewElement != this._firstFreeElement ||
-      this._waitProcessRetiredElementCount > 0 ||
-      this._instanceBufferResized
-    ) {
-      this._addNewParticlesToVertexBuffer();
+    // @todo: just update new particle buffer to instance buffer, ignore retired particle in shader, especially billboard
+    if (this._XXMode) {
+      // if (this._firstNewElement != this._firstFreeElement) {
+      this._addNewParticlesToVertexBufferX(
+        this._instanceBufferResized ? this._firstActiveElement : this._firstNewElement
+      );
+      // }
+    } else {
+      if (
+        this._firstNewElement != this._firstFreeElement ||
+        this._waitProcessRetiredElementCount > 0 ||
+        this._instanceBufferResized
+      ) {
+        this._addNewParticlesToVertexBuffer();
+      }
     }
   }
 
@@ -630,20 +639,38 @@ export class ParticleGenerator {
       }
     }
   }
-
-  private _addNewParticlesToVertexBuffer(): void {
-    const firstActiveElement = this._firstActiveElement;
-    const firstFreeElement = this._firstFreeElement;
-
-    // firstActiveElement == firstFreeElement should not update
-    if (firstActiveElement === firstFreeElement) {
-      return;
-    }
-    
+  private _addNewParticlesToVertexBufferX(formElement: number): void {
     const byteStride = this._renderer.engine._particleBufferUtils.instanceVertexStride;
-    const start = firstActiveElement * byteStride;
+    const firstFreeElement = this._firstFreeElement;
     const instanceBuffer = this._instanceVertexBufferBinding.buffer;
     const dataBuffer = this._instanceVertices.buffer;
+
+    // const firstNewElement = this._firstNewElement;
+    const start = formElement * byteStride;
+    if (formElement < firstFreeElement) {
+      instanceBuffer.setData(dataBuffer, start, start, (firstFreeElement - formElement) * byteStride);
+    } else if (formElement !== firstFreeElement) {
+      const start = formElement * byteStride;
+      const firstSegmentCount = (this._currentParticleCount - formElement) * byteStride;
+      instanceBuffer.setData(dataBuffer, start, start, firstSegmentCount);
+
+      if (firstFreeElement > 0) {
+        instanceBuffer.setData(dataBuffer, 0, 0, firstFreeElement * byteStride);
+      }
+    }
+
+    this._firstNewElement = firstFreeElement;
+    this._waitProcessRetiredElementCount = 0;
+    this._instanceBufferResized = false;
+  }
+
+  private _addNewParticlesToVertexBuffer(): void {
+    const byteStride = this._renderer.engine._particleBufferUtils.instanceVertexStride;
+    const firstFreeElement = this._firstFreeElement;
+    const instanceBuffer = this._instanceVertexBufferBinding.buffer;
+    const dataBuffer = this._instanceVertices.buffer;
+    const firstActiveElement = this._firstActiveElement;
+    const start = firstActiveElement * byteStride;
 
     if (firstActiveElement < firstFreeElement) {
       instanceBuffer.setData(
@@ -653,7 +680,8 @@ export class ParticleGenerator {
         (firstFreeElement - firstActiveElement) * byteStride,
         SetDataOptions.Discard
       );
-    } else {
+    } else if (firstActiveElement !== firstFreeElement) {
+      // `firstActiveElement == firstFreeElement` should not update
       const firstSegmentCount = (this._currentParticleCount - firstActiveElement) * byteStride;
       instanceBuffer.setData(dataBuffer, 0, start, firstSegmentCount, SetDataOptions.Discard);
 
@@ -661,6 +689,7 @@ export class ParticleGenerator {
         instanceBuffer.setData(dataBuffer, firstSegmentCount, 0, firstFreeElement * byteStride);
       }
     }
+
     this._firstNewElement = firstFreeElement;
     this._waitProcessRetiredElementCount = 0;
     this._instanceBufferResized = false;
