@@ -1,9 +1,12 @@
 // @ts-ignore
 import { BoundingBox, Matrix, Vector3, Vector4 } from "@galacean/engine-math";
+import { SpriteMaskLayer } from "./2d";
+import { SpriteMaskInteraction } from "./2d/enums/SpriteMaskInteraction";
 import { Component } from "./Component";
 import { DependentMode, dependentComponents } from "./ComponentsDependencies";
 import { Entity } from "./Entity";
 import { RenderContext } from "./RenderPipeline/RenderContext";
+import { SubRenderElement } from "./RenderPipeline/SubRenderElement";
 import { Transform, TransformModifyFlags } from "./Transform";
 import { assignmentClone, deepClone, ignoreClone } from "./clone/CloneManager";
 import { IComponentCustomClone } from "./clone/ComponentCloner";
@@ -12,9 +15,6 @@ import { ShaderMacro, ShaderProperty } from "./shader";
 import { ShaderData } from "./shader/ShaderData";
 import { ShaderMacroCollection } from "./shader/ShaderMacroCollection";
 import { ShaderDataGroup } from "./shader/enums/ShaderDataGroup";
-import { SubRenderElement } from "./RenderPipeline/SubRenderElement";
-import { SpriteMaskInteraction } from "./2d/enums/SpriteMaskInteraction";
-import { SpriteMaskLayer } from "./2d";
 
 /**
  * Basis for all renderers.
@@ -56,6 +56,16 @@ export class Renderer extends Component implements IComponentCustomClone {
   /** @internal */
   @assignmentClone
   _maskLayer: number = SpriteMaskLayer.Layer0;
+
+  /** @internal */
+  @ignoreClone
+  _shaderDataRenderCounter: number = -1;
+  /** @internal */
+  @ignoreClone
+  _shaderDataBatched: boolean = false;
+  /** @internal */
+  @ignoreClone
+  _shaderDataProjectionFlipped: boolean = false;
 
   @ignoreClone
   protected _overrideUpdate: boolean = false;
@@ -331,7 +341,6 @@ export class Renderer extends Component implements IComponentCustomClone {
       this._distanceForSort = Vector3.distanceSquared(boundsCenter, cameraPosition);
     }
 
-    this._updateShaderData(context, false);
     this._render(context);
 
     // union camera global macro and renderer macro.
@@ -383,7 +392,7 @@ export class Renderer extends Component implements IComponentCustomClone {
   /**
    * @internal
    */
-  _updateShaderData(context: RenderContext, onlyMVP: boolean): void {
+  _updateShaderData(context: RenderContext, onlyMVP: boolean, batched: boolean): void {
     const entity = this.entity;
     const worldMatrix = entity.transform.worldMatrix;
     if (onlyMVP) {
@@ -431,7 +440,7 @@ export class Renderer extends Component implements IComponentCustomClone {
     const mvpMatrix = this._mvpMatrix;
 
     Matrix.multiply(context.viewProjectionMatrix, worldMatrix, mvpMatrix);
-    this.shaderData.setMatrix(Renderer._mvpMatrixProperty, mvpMatrix);
+    this.shaderData.setMatrix(Renderer._mvpMatrixProperty, context.viewProjectionMatrix);
   }
 
   /**
