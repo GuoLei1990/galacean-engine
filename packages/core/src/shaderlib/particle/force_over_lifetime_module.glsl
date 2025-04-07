@@ -45,16 +45,16 @@
             float normalizedTimeRange = key.x - lastKey.x;
             float timeRange = normalizedTimeRange * a_ShapePositionStartLifeTime.w;
             if (key.x >= normalizedAge){
-                float timeOffset = (normalizedAge - lastKey.x) * a_ShapePositionStartLifeTime.w;
-                cumulativeValue += computeDisplacementIntegral(timeOffset, timeRange, lastKey.y, key.y, currentVelocity);
-
                 float normalizedTimeOffset = normalizedAge - lastKey.x;
+                float timeOffset = normalizedTimeOffset * a_ShapePositionStartLifeTime.w;
+                cumulativeValue += computeDisplacementIntegral(timeOffset, timeRange, lastKey.y, key.y, currentVelocity);
+                
                 float acceleration = mix(lastKey.y, key.y, normalizedTimeOffset / normalizedTimeRange);
-                currentVelocity += 0.5 * normalizedTimeOffset * (lastKey.y + acceleration);
+                currentVelocity += 0.5 * timeOffset * (lastKey.y + acceleration);
                 break;
             } else {  
                 cumulativeValue += computeDisplacementIntegral(timeRange, timeRange, lastKey.y, key.y, currentVelocity);
-                currentVelocity += 0.5 * normalizedTimeRange * (lastKey.y + key.y);
+                currentVelocity += 0.5 * timeRange * (lastKey.y + key.y);
             }
         }
         return cumulativeValue;
