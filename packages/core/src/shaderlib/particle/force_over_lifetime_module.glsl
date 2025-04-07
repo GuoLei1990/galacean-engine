@@ -42,14 +42,12 @@
             vec2 key = keys[i];
             vec2 lastKey = keys[i - 1];
 
-            float normalizedTimeRange = key.x - lastKey.x;
-            float timeRange = normalizedTimeRange * a_ShapePositionStartLifeTime.w;
+            float timeRange = ( key.x - lastKey.x) * a_ShapePositionStartLifeTime.w;
             if (key.x >= normalizedAge){
-                float normalizedTimeOffset = normalizedAge - lastKey.x;
-                float timeOffset = normalizedTimeOffset * a_ShapePositionStartLifeTime.w;
+                float timeOffset = (normalizedAge - lastKey.x) * a_ShapePositionStartLifeTime.w;
                 cumulativeValue += computeDisplacementIntegral(timeOffset, timeRange, lastKey.y, key.y, currentVelocity);
                 
-                float acceleration = mix(lastKey.y, key.y, normalizedTimeOffset / normalizedTimeRange);
+                float acceleration = mix(lastKey.y, key.y, timeOffset / timeRange);
                 currentVelocity += 0.5 * timeOffset * (lastKey.y + acceleration);
                 break;
             } else {  
