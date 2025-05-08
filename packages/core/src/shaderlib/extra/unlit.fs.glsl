@@ -24,9 +24,11 @@ void main() {
 
     gl_FragColor = baseColor;
 
-    #ifndef MATERIAL_IS_TRANSPARENT
-        gl_FragColor.a = 1.0;
-    #endif
+    // #ifndef MATERIAL_IS_TRANSPARENT
+    //     gl_FragColor.a = 1.0;
+    // #endif
 
-    #include <FogFragment>
+    // #include <FogFragment>
+
+    // glFragColor = linearToGamma(glFragColor);
 }
