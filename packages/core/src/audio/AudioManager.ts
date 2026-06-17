@@ -75,16 +75,15 @@ export class AudioManager {
   }
 
   private static _onVisibilityChange(): void {
-    // Skip when suspended by an explicit suspend() — a deliberate pause must not be auto-resumed.
+    // Returning to foreground with a non-running context (and not a deliberate pause): iOS leaves it
+    // "interrupted", which cannot be resumed directly. suspend() first transitions it to "suspended",
+    // then resume() restarts the pipeline. https://bugs.webkit.org/show_bug.cgi?id=263627
     if (
       !document.hidden &&
       !AudioManager._suspendedByCaller &&
       AudioManager._playingCount > 0 &&
       !AudioManager.isAudioContextRunning()
     ) {
-      // On iOS, a backgrounded AudioContext can get stuck: a bare resume() reports "running" but never
-      // restarts audio. Suspending first forces the following resume() to actually restart the pipeline.
-      // https://bugs.webkit.org/show_bug.cgi?id=263627
       const context = AudioManager.getContext();
       context.suspend();
       AudioManager._needsUserGestureResume = true; // fallback if the auto-resume below is rejected
