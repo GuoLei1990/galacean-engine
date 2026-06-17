@@ -70,24 +70,15 @@ export class AudioManager {
     return AudioManager.getContext().state === "running";
   }
 
-  // Delay between the recovery suspend() and resume(). Empirical value (matches Phaser's
-  // WebAudioSoundManager); there is no spec/vendor-recommended number — it is the most stable
-  // value in on-device testing. A Promise-chained suspend().then(resume) is cleaner in theory but
-  // occasionally fails on this race, while this fixed delay has not.
-  private static readonly _zombieResumeDelay = 100;
-
   private static _onVisibilityChange(): void {
     if (!document.hidden && AudioManager._playingCount > 0 && !AudioManager.isAudioContextRunning()) {
-      // After backgrounding, iOS Safari (and WKWebView) can leave the AudioContext in a "zombie" state:
-      // a bare resume() reports state "running" but the rendering pipeline never restarts (no sound,
-      // currentTime frozen). suspend() first clears that state so the following resume() takes the full
-      // restart path instead of being short-circuited; the resume runs automatically without waiting for
-      // a user gesture. Reproducible on plain iOS Safari, not only WKWebView.
-      // Related: https://bugs.webkit.org/show_bug.cgi?id=263627
+      // On iOS, a backgrounded AudioContext can get stuck: a bare resume() reports "running" but never
+      // restarts audio. Suspending first forces the following resume() to actually restart the pipeline.
+      // https://bugs.webkit.org/show_bug.cgi?id=263627
       const context = AudioManager.getContext();
       context.suspend();
-      // Fallback: if the automatic resume below fails (iOS may reject it), a later user gesture retries.
-      AudioManager._needsUserGestureResume = true;
+      AudioManager._needsUserGestureResume = true; // fallback if the auto-resume below is rejected
+      // 100ms is an empirical delay (no spec value); resuming too soon after suspend is unreliable.
       setTimeout(() => {
         context
           .resume()
@@ -95,7 +86,7 @@ export class AudioManager {
             AudioManager._needsUserGestureResume = false;
           })
           .catch(() => {});
-      }, AudioManager._zombieResumeDelay);
+      }, 100);
     }
   }
 
