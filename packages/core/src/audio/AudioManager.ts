@@ -74,10 +74,20 @@ export class AudioManager {
     if (!document.hidden && AudioManager._playingCount > 0 && !AudioManager.isAudioContextRunning()) {
       // iOS WKWebView WebKit bug(Triggered in LingGuang App): AudioContext may be in a "zombie" state where
       // state reports "suspended" but resume() alone won't restart audio rendering.
-      // Calling suspend() first forces a clean internal state reset before user gesture triggers resume.
+      // Calling suspend() first forces a clean internal state reset, then resume() after a short delay
+      // to actually restart the rendering pipeline — without waiting for a user gesture.
       // Related: https://bugs.webkit.org/show_bug.cgi?id=263627
-      AudioManager.suspend();
-      AudioManager._needsUserGestureResume = true;
+      const context = AudioManager.getContext();
+      context.suspend();
+      AudioManager._needsUserGestureResume = true; // fallback: if auto-resume below fails, a gesture can retry
+      setTimeout(() => {
+        context
+          .resume()
+          .then(() => {
+            AudioManager._needsUserGestureResume = false;
+          })
+          .catch(() => {});
+      }, 100);
     }
   }
 
