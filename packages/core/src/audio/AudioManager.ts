@@ -9,12 +9,15 @@ export class AudioManager {
   private static _gainNode: GainNode;
   private static _resumePromise: Promise<void> = null;
   private static _needsUserGestureResume = false;
+  // Suspended by an explicit suspend() call; recovery paths must not auto-resume it.
+  private static _suspendedByCaller = false;
 
   /**
    * Suspend the audio context.
    * @returns A promise that resolves when the audio context is suspended
    */
   static suspend(): Promise<void> {
+    AudioManager._suspendedByCaller = true;
     return AudioManager.getContext().suspend();
   }
 
@@ -24,6 +27,7 @@ export class AudioManager {
    * @returns A promise that resolves when the audio context is resumed
    */
   static resume(): Promise<void> {
+    AudioManager._suspendedByCaller = false;
     return (AudioManager._resumePromise ??= AudioManager.getContext()
       .resume()
       .then(() => {
@@ -71,7 +75,13 @@ export class AudioManager {
   }
 
   private static _onVisibilityChange(): void {
-    if (!document.hidden && AudioManager._playingCount > 0 && !AudioManager.isAudioContextRunning()) {
+    // Skip when suspended by an explicit suspend() — a deliberate pause must not be auto-resumed.
+    if (
+      !document.hidden &&
+      !AudioManager._suspendedByCaller &&
+      AudioManager._playingCount > 0 &&
+      !AudioManager.isAudioContextRunning()
+    ) {
       // On iOS, a backgrounded AudioContext can get stuck: a bare resume() reports "running" but never
       // restarts audio. Suspending first forces the following resume() to actually restart the pipeline.
       // https://bugs.webkit.org/show_bug.cgi?id=263627
@@ -91,7 +101,7 @@ export class AudioManager {
   }
 
   private static _resumeAfterInterruption(): void {
-    if (AudioManager._needsUserGestureResume) {
+    if (!AudioManager._suspendedByCaller && AudioManager._needsUserGestureResume) {
       AudioManager.resume().catch((e) => {
         console.warn("Failed to resume AudioContext:", e);
       });
