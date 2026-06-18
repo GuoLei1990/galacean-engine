@@ -156,6 +156,10 @@ export class AudioSource extends Component {
     if (!this._clip?._getAudioSource() || this._isPlaying || this._pendingPlay) {
       return;
     }
+    // Hidden page: don't start (would leak a sound) and don't pend (would replay out of sync) -> drop
+    if (document.hidden) {
+      return;
+    }
 
     if (AudioManager.isAudioContextRunning()) {
       this._startPlayback();
@@ -170,8 +174,8 @@ export class AudioSource extends Component {
             return;
           }
           this._pendingPlay = false;
-          // Check if still valid to play after async resume
-          if (this._destroyed || !this.enabled || !this._clip) {
+          // Check if still valid to play after async resume (page may have been hidden meanwhile)
+          if (this._destroyed || !this.enabled || !this._clip || document.hidden) {
             return;
           }
           this._startPlayback();
