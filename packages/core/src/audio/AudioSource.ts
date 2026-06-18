@@ -72,7 +72,8 @@ export class AudioSource extends Component {
   set volume(value: number) {
     value = Math.min(Math.max(0, value), 1.0);
     this._volume = value;
-    this._gainNode.gain.setValueAtTime(value, AudioManager.getContext().currentTime);
+    // Applied lazily in _ensureGainNode() if the node isn't created yet.
+    this._gainNode?.gain.setValueAtTime(value, AudioManager.getContext().currentTime);
   }
 
   /**
@@ -143,9 +144,9 @@ export class AudioSource extends Component {
   constructor(entity: Entity) {
     super(entity);
     this._onPlayEnd = this._onPlayEnd.bind(this);
-
-    this._gainNode = AudioManager.getContext().createGain();
-    this._gainNode.connect(AudioManager.getGainNode());
+    // Gain node is created lazily on first play, not here: creating it would spin up the AudioContext
+    // before any user gesture, and on iOS such a pre-gesture context never recovers from a phone-call
+    // interruption (stays a silent zombie). https://bugs.webkit.org/show_bug.cgi?id=263627
   }
 
   /**
@@ -219,7 +220,7 @@ export class AudioSource extends Component {
    */
   _cloneTo(target: AudioSource): void {
     target._clip?._addReferCount(1);
-    target._gainNode.gain.setValueAtTime(target._volume, AudioManager.getContext().currentTime);
+    // _volume is field-cloned; its gain node is applied lazily on first play.
   }
 
   /**
@@ -250,6 +251,16 @@ export class AudioSource extends Component {
     this.stop();
   }
 
+  private _ensureGainNode(): GainNode {
+    let gainNode = this._gainNode;
+    if (!gainNode) {
+      this._gainNode = gainNode = AudioManager.getContext().createGain();
+      gainNode.connect(AudioManager.getGainNode());
+      gainNode.gain.setValueAtTime(this._volume, AudioManager.getContext().currentTime);
+    }
+    return gainNode;
+  }
+
   private _startPlayback(): void {
     const startTime = this._pausedTime > 0 ? this._pausedTime - this._playTime : 0;
     this._initSourceNode(startTime);
@@ -270,7 +281,7 @@ export class AudioSource extends Component {
     sourceNode.onended = this._onPlayEnd;
     this._sourceNode = sourceNode;
 
-    sourceNode.connect(this._gainNode);
+    sourceNode.connect(this._ensureGainNode());
     sourceNode.start(0, startTime);
   }
 
