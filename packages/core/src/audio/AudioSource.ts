@@ -72,7 +72,7 @@ export class AudioSource extends Component {
   set volume(value: number) {
     value = Math.min(Math.max(0, value), 1.0);
     this._volume = value;
-    // Applied lazily in _ensureGainNode() if the node isn't created yet.
+    // No node yet -> _ensureGainNode() applies _volume on first play
     this._gainNode?.gain.setValueAtTime(value, AudioManager.getContext().currentTime);
   }
 
@@ -146,7 +146,7 @@ export class AudioSource extends Component {
     this._onPlayEnd = this._onPlayEnd.bind(this);
     // Gain node is created lazily on first play, not here: creating it would spin up the AudioContext
     // before any user gesture, and on iOS such a pre-gesture context never recovers from a phone-call
-    // interruption (stays a silent zombie). https://bugs.webkit.org/show_bug.cgi?id=263627
+    // interruption (stays a silent zombie) https://bugs.webkit.org/show_bug.cgi?id=263627
   }
 
   /**
@@ -220,7 +220,7 @@ export class AudioSource extends Component {
    */
   _cloneTo(target: AudioSource): void {
     target._clip?._addReferCount(1);
-    // _volume is field-cloned; its gain node is applied lazily on first play.
+    // _volume is field-cloned; its gain node is applied lazily on first play
   }
 
   /**

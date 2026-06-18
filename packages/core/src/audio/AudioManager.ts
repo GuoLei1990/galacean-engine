@@ -9,7 +9,6 @@ export class AudioManager {
   private static _gainNode: GainNode;
   private static _resumePromise: Promise<void> = null;
   private static _needsUserGestureResume = false;
-  // Suspended by an explicit suspend() call; recovery paths must not auto-resume it.
   private static _suspendedByCaller = false;
 
   /**
@@ -76,8 +75,8 @@ export class AudioManager {
 
   private static _onVisibilityChange(): void {
     // Returning to foreground with a non-running context (and not a deliberate pause): iOS leaves it
-    // "interrupted", which cannot be resumed directly. suspend() first transitions it to "suspended",
-    // then resume() restarts the pipeline. https://bugs.webkit.org/show_bug.cgi?id=263627
+    // "interrupted", which cannot be resumed directly; suspend() first transitions it to "suspended",
+    // then resume() restarts the pipeline https://bugs.webkit.org/show_bug.cgi?id=263627
     if (
       !document.hidden &&
       !AudioManager._suspendedByCaller &&
@@ -87,7 +86,7 @@ export class AudioManager {
       const context = AudioManager.getContext();
       context.suspend();
       AudioManager._needsUserGestureResume = true; // fallback if the auto-resume below is rejected
-      // 100ms is an empirical delay (no spec value); resuming too soon after suspend is unreliable.
+      // 100ms is an empirical delay (no spec value); resuming too soon after suspend is unreliable
       setTimeout(() => {
         context
           .resume()

@@ -12,8 +12,8 @@ import {
 @resourceLoader(AssetType.Audio, ["mp3", "ogg", "wav", "m4a", "aac", "flac"])
 class AudioLoader extends Loader<AudioClip> {
   // Decode here instead of the playback AudioContext: decoding happens at load time (before any user
-  // gesture), and creating the playback context that early breaks iOS phone-call recovery. Offline
-  // context decodes without touching the playback context. https://bugs.webkit.org/show_bug.cgi?id=263627
+  // gesture), and creating the playback context that early breaks iOS phone-call recovery; the offline
+  // context decodes without touching the playback context https://bugs.webkit.org/show_bug.cgi?id=263627
   private static _decodeContext: OfflineAudioContext;
 
   load(item: LoadItem, resourceManager: ResourceManager): AssetPromise<AudioClip> {
@@ -53,7 +53,9 @@ class AudioLoader extends Loader<AudioClip> {
   }
 
   private static _getDecodeContext(): OfflineAudioContext {
-    // length/channels unused (decode only); buffer is resampled to the playback rate at play time.
+    // length/channels unused (decode only); decodeAudioData resamples to this rate, then the buffer is
+    // resampled again to the playback rate at play time, so pitch/duration are unaffected; 44100 is the
+    // safest rate across browsers; unprefixed OfflineAudioContext requires iOS >= 14.5
     return (AudioLoader._decodeContext ||= new OfflineAudioContext(1, 1, 44100));
   }
 }
