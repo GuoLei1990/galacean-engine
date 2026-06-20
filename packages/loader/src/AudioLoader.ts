@@ -13,7 +13,7 @@ import {
 class AudioLoader extends Loader<AudioClip> {
   // Decode here instead of the playback AudioContext: decoding happens at load time (before any user
   // gesture), and creating the playback context that early breaks iOS phone-call recovery; the offline
-  // context decodes without touching the playback context https://bugs.webkit.org/show_bug.cgi?id=263627
+  // context decodes without touching the playback context
   private static _decodeContext: OfflineAudioContext;
 
   load(item: LoadItem, resourceManager: ResourceManager): AssetPromise<AudioClip> {

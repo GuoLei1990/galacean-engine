@@ -146,7 +146,7 @@ export class AudioSource extends Component {
     this._onPlayEnd = this._onPlayEnd.bind(this);
     // Gain node is created lazily on first play, not here: creating it would spin up the AudioContext
     // before any user gesture, and on iOS such a pre-gesture context never recovers from a phone-call
-    // interruption (stays a silent zombie) https://bugs.webkit.org/show_bug.cgi?id=263627
+    // interruption (stays a silent zombie)
   }
 
   /**
